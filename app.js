@@ -5,18 +5,14 @@ const express = require('express');
 const morgan = require('morgan');
 
 /*Test connection*/
-// const sequelize = require('sequelize');
-
-// const sequelize = require('./models').sequelize;
-
 const {sequelize} = require('./models');
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log('Connected to the database successfully!');
   })
   .catch(err => {
-    console.error('Unable to connect to the database:', err);
+    console.error('Disconnected to the database:', err);
   });
 
 // Create the Express app.
@@ -32,14 +28,14 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // import index.js
-const routes = require('./routes/index');
-var usersRoute = require('./routes/users');
+const route = require('./routes/index');
+const usersRoute = require('./routes/users');
 const coursesRoute = require('./routes/courses');
 
 // TODO setup your api routes here
-app.use('/api', routes); //list of users
-app.use('/api/users', usersRoute);
-app.use('/api/courses', coursesRoute);
+app.use('/api', route); //list of users
+app.use('/api/users', usersRoute); //list of users
+app.use('/api/courses', coursesRoute); //list of courses
 
 // setup a friendly greeting for the root route
 app.get('/', (req, res) => {
