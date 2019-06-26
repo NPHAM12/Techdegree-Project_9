@@ -121,47 +121,6 @@ router.post('/', auth, (req, res, next) => {
       }
 });
 
-/* PUT update course. */
-// router.put('/:id', (req, res, next) => {
-//   const course = req.body;
-//   //Check empty title or empty description
-//   if (course.title == false || course.description == false){
-//     const err = new Error("Missing title or description!!!");
-//     err.status = 400;
-//     next(err); //pass any Sequelize validation errors to the global error handler.
-//   }else{
-//     //Find a course to modify
-//     Course.findOne({
-//       where: {
-//         id: course.id
-//       }
-//     })
-//     .then( (currentCourse) => {
-//       //having an exist course
-//       if(currentCourse) {
-//         //Modifying contents in course
-//         const editCourse = {
-//           id: course.id,
-//           title: course.title,
-//           description: course.description,
-//           estimatedTime: course.estimatedTime,
-//           materialsNeeded: course.materialsNeeded,
-//           userId: req.currentUser.id
-//         };
-//         //updating the modified course
-//         currentCourse.update(editCourse);
-//         res.status(204).end();  //Return no content
-//       } else{ // No exist course
-//           res.status(404).json({message: 'Ooop! No Exist Course!'});
-//         }
-//       })
-//       .catch( (err) => {
-//         err.status = 500;
-//         next(err);
-//     });
-//   }
-// });
-
 router.put('/:id', auth, (req, res, next) => {
   const course = req.body;
   //Check empty title or empty description
@@ -186,7 +145,7 @@ router.put('/:id', auth, (req, res, next) => {
             currentCourse.description = course.description,
             currentCourse.estimatedTime = course.estimatedTime,
             currentCourse.materialsNeeded = course.materialsNeeded,
-            // currentCourse.userId= req.currentUser.id
+            
             //updating the modified course
             currentCourse.update(course);
           res.status(204).end(); //Return no content
