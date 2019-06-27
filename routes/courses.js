@@ -85,10 +85,13 @@ router.post('/', auth, (req, res, next) => {
   //Check empty title or empty description
   if(newCourse.id){
     const err = new Error("No Need id!");
-    err.status = 500;
+    err.status = 400;
     next(err);//pass any Sequelize validation errors to the global error handler.
   }
-  else if (newCourse.title == false || newCourse.description == false){
+  // else if (!newCourse.title == false || newCourse.description == false){
+  // the codition code "above" will be bad when one of conditions is "undefined"
+
+  else if (!newCourse.title || !newCourse.description){
     const err = new Error("Missing title or description!!!");
     err.status = 400;
     next(err); //pass any Sequelize validation errors to the global error handler.
@@ -109,7 +112,7 @@ router.post('/', auth, (req, res, next) => {
               res.status(201).end();//return no content
             })
             .catch(err => {
-              err.status = 500;
+              err.status = 400;
               next(err); //pass any Sequelize validation errors to the global error handler.
             });
         }else { // if a new course match with one of the exist courses
@@ -121,11 +124,15 @@ router.post('/', auth, (req, res, next) => {
       }
 });
 
+// PUT /api/courses/:id 204 - Updates a course and returns no content
 router.put('/:id', auth, (req, res, next) => {
   const course = req.body;
   //Check empty title or empty description
   // Check empty title or empty description
-  if (course.title == false || course.description == false) {
+  // if (course.title == false || course.description == false) {
+  // the codition code "above" will be bad when one of conditions is "undefined"
+
+  if (!course.title || !course.description) {
     const err = new Error("Missing title or description!!!");
     err.status = 400;
     next(err); //pass any Sequelize validation errors to the global error handler.
@@ -145,7 +152,7 @@ router.put('/:id', auth, (req, res, next) => {
             currentCourse.description = course.description,
             currentCourse.estimatedTime = course.estimatedTime,
             currentCourse.materialsNeeded = course.materialsNeeded,
-            
+            // currentCourse.userId= req.currentUser.id
             //updating the modified course
             currentCourse.update(course);
           res.status(204).end(); //Return no content
@@ -156,14 +163,13 @@ router.put('/:id', auth, (req, res, next) => {
         }
       })
       .catch((err) => {
-        err.status = 500;
+        err.status = 400;
         next(err);//pass any Sequelize validation errors to the global error handler.
       });
   }
 });
 
 // DELETE /api/courses/:id 204 - Deletes a course and returns no content
-
 router.delete('/:id', auth, (req, res, next) => {
   Course.findByPk(req.params.id)
     .then((delCourse) => {
@@ -180,7 +186,7 @@ router.delete('/:id', auth, (req, res, next) => {
       res.status(204).end();//Return no content
     })
     .catch((err) => {
-      err.status = 500;
+      err.status = 400;
       next(err);//pass any Sequelize validation errors to the global error handler.
     });
 });
