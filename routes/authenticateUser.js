@@ -38,18 +38,18 @@ router.use((req, res, next) => {
           next();//pass any Sequelize validation errors to the global error handler.
         } else { //input password is not correct
           message = 'Oooop! Wrong password';
-          res.status(401);
+          res.status(400);
           res.json( { message: message} );
         }
       } else { // There is no username on the database
         message = `Opppp! Wrong username: ${credentials.name}`;
-        res.status(401);
+        res.status(400);
         res.json( { message: message });
       }
     });
   } else {
     const err = new Error('Access Denied! Please sign in your account!');
-    err.status = 401;
+    err.status = 400;
     next(err);//pass any Sequelize validation errors to the global error handler.
   }
 });
